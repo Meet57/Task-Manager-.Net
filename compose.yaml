@@ -1,0 +1,7 @@
+﻿services:
+  taskmanagerapi:
+    image: taskmanagerapi
+    build:
+      context: .
+      dockerfile: TaskManagerAPI/Dockerfile
+

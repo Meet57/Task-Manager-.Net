@@ -1,22 +1,23 @@
-﻿FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
-WORKDIR /app
-EXPOSE 80
-EXPOSE 443
-
+﻿# Use the official .NET 6 SDK image to build the app
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
-ARG BUILD_CONFIGURATION=Release
-WORKDIR /src
-COPY ["TaskManagerAPI/TaskManagerAPI.csproj", "TaskManagerAPI/"]
-RUN dotnet restore "TaskManagerAPI/TaskManagerAPI.csproj"
-COPY . .
-WORKDIR "/src/TaskManagerAPI"
-RUN dotnet build "./TaskManagerAPI.csproj" -c $BUILD_CONFIGURATION -o /app/build
 
-FROM build AS publish
-ARG BUILD_CONFIGURATION=Release
-RUN dotnet publish "./TaskManagerAPI.csproj" -c $BUILD_CONFIGURATION -o /app/publish /p:UseAppHost=false
-
-FROM base AS final
 WORKDIR /app
-COPY --from=publish /app/publish .
+
+# Copy csproj and restore as distinct layers
+COPY TaskManagerAPI.csproj ./
+RUN dotnet restore
+
+# Copy the rest of the source code
+COPY . ./
+
+# Build the app
+RUN dotnet publish -c Release -o out
+
+# Final runtime image
+FROM mcr.microsoft.com/dotnet/aspnet:6.0
+
+WORKDIR /app
+COPY --from=build /app/out ./
+
+EXPOSE 80
 ENTRYPOINT ["dotnet", "TaskManagerAPI.dll"]

@@ -11,20 +11,17 @@ services:
       MYSQL_ROOT_PASSWORD: pass123
       MYSQL_DATABASE: taskmanagerdb
     volumes:
-      - mysql_data:/var/lib/mysql
+      - ./seed.sql:/docker-entrypoint-initdb.d/init.sql
 
   taskmanagerapi:
     build:
       context: .
-      dockerfile: TaskManagerAPI/Dockerfile
+      dockerfile: Dockerfile
     container_name: taskmanager-api
     ports:
-      - "5000:80"
+      - "7154:80"
     depends_on:
       - mysql
     environment:
-      - ASPNETCORE_ENVIRONMENT=Development
-      - ConnectionStrings__Default=server=mysql;port=3306;database=taskmanagerdb;user=root;password=pass123;
-
-volumes:
-  mysql_data:
+      - ASPNETCORE_ENVIRONMENT=Docker
+      - ConnectionStrings__DefaultConnection=server=mysql;port=3306;database=taskmanagerdb;user=root;password=pass123;

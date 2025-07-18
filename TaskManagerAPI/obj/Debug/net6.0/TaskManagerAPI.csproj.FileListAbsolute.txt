@@ -33,3 +33,4 @@
 /Users/meet/RiderProjects/TaskManagerAPI/TaskManagerAPI/bin/Debug/net6.0/Microsoft.Extensions.Caching.Memory.dll
 /Users/meet/RiderProjects/TaskManagerAPI/TaskManagerAPI/bin/Debug/net6.0/MySqlConnector.dll
 /Users/meet/RiderProjects/TaskManagerAPI/TaskManagerAPI/bin/Debug/net6.0/Pomelo.EntityFrameworkCore.MySql.dll
+/Users/meet/RiderProjects/TaskManagerAPI/TaskManagerAPI/bin/Debug/net6.0/appsettings.Docker.json

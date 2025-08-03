@@ -9,6 +9,7 @@ public class TaskService : ITaskService
 {
     private readonly ITaskRepository _taskRepository;
     private readonly ITagRepository _tagRepository;
+    private Boolean StoredProcedure = true;
 
     public TaskService(ITaskRepository taskRepository, ITagRepository tagRepository)
     {
@@ -34,7 +35,16 @@ public class TaskService : ITaskService
             Tags = tags
         };
 
-        await _taskRepository.CreateAsync(task);
+        if (StoredProcedure)
+        {
+            await _taskRepository.CreateTaskUsingProcedureAsync(dto);
+            Console.WriteLine("Added with stored procedure");
+        }
+        else
+        {
+            await _taskRepository.CreateAsync(task);
+        }
+        
         return task;
     }
 

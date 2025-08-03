@@ -1,5 +1,7 @@
 using Microsoft.EntityFrameworkCore;
+using MySqlConnector;
 using TaskManagerAPI.Data;
+using TaskManagerAPI.DTOs;
 using TaskManagerAPI.Models;
 using TaskManagerAPI.Repositories.Interfaces;
 
@@ -23,6 +25,26 @@ public class TaskRepository : ITaskRepository
     {
         _context.Tasks.Add(task);
         return _context.SaveChangesAsync();
+    }
+    
+    public async Task<TaskItem?> CreateTaskUsingProcedureAsync(TaskCreateDto task)
+    {
+        var tagString = task.Tags != null ? string.Join(",", task.Tags) : "";
+
+        var result = await _context.Database.ExecuteSqlRawAsync(
+            "CALL CreateTaskWithTags({0}, {1}, {2}, {3})",
+            task.Title,
+            task.Description ?? "",
+            task.IsCompleted,
+            tagString
+        );
+
+        var latestTask = await _context.Tasks
+            .Include(t => t.Tags)
+            .OrderByDescending(t => t.Id)
+            .FirstOrDefaultAsync();
+
+        return latestTask;
     }
     
     public async Task<TaskItem?> GetByIdAsync(int id)

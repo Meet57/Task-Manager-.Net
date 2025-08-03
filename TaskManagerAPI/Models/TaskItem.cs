@@ -8,5 +8,5 @@ public class TaskItem
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public bool IsCompleted { get; set; }
 
-    public List<Tag>? Tags { get; set; }
+    public ICollection<Tag>? Tags { get; set; } = new HashSet<Tag>();
 }

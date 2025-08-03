@@ -1,5 +1,7 @@
 # Build output
 /bin/
+/bin
+bin
 /obj/
 
 # Rider IDE files
